@@ -1,0 +1,25 @@
+
+String buildShell = "${env.buildShell}"
+pipeline
+{
+agent any
+stages{ 
+    stage("mvnbuild"){
+        steps{
+            script{
+                def mavenhome = tool "M3"
+                sh "${mavenhome}/bin/mvn ${buildShell}" 
+            } 
+        }
+    }
+    stage("antbuild"){
+        steps{
+            script{
+                anthome = tool "ANT" 
+                sh "${anthome}/bin/ant ${buildShell}"
+            }
+            
+        } 
+    }
+}
+}
