@@ -15,11 +15,37 @@ stages{
     stage("antbuild"){
         steps{
             script{
-                anthome = tool "ANT" 
+                try{
+                    anthome = tool "ANT" 
                 sh "${anthome}/bin/ant ${buildShell}"
+                }catch(e){
+                    println(e)
+                }
+                
             }
             
         } 
     }
-}
+    stage("gradle"){
+        steps{
+            script{
+                def gradle = tool "GRADLE"
+                sh "${gradle}/bin/gradle ${buildShell}"
+            }  
+        }
+    }
+    stage("npm"){
+        steps{
+            script{
+                def npmhome = tool "NPM"
+                sh """
+                export NODEHOME=${npmhome}
+                export PATH=\$PATH:\$NODEHOME/bin
+                ${npmhome}/bin/npm ${buildShell}
+                """
+            }
+        }
+    }
+    }
+    
 }
